@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>插件：d3 力导布局</title>
+    <style>::-webkit-scrollbar{display:none;}html,body{overflow:hidden;}</style>
+</head>
+<body>
+<div id="mountNode"></div>
+<script>/*Fixing iframe window.innerHeight 0 issue in Safari*/document.body.clientHeight;</script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/g6/1.2.8/g6.min.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
+<script src="https://gw.alipayobjects.com/os/antv/assets/g6-plugins/1.0.9/g6-plugins.min.js"></script>
+<script type="text/javascript">
+    $.getJSON('http://localhost:3100/json/graph/test_3000.json', data => {
+        const net = new G6.Net({
+            id: 'mountNode',                      // dom id
+            height: window.innerHeight,    // 画布高
+            grid: null,
+            useAnchor: false,
+            // plugins: [ plugin ],
+        });
+        for(let item of data.links){
+            item.id = item.id + '-link'
+        }
+        let beginTime = Date.now()
+        console.log(beginTime, 'render begin')
+        net.source(data.nodes, data.links);
+        net.node()
+            .shape('circle')
+            .size(20)
+            .style({
+                fill: '#32A1EB',
+                fillOpacity: 1,
+            });
+        net.render();
+        console.log(Date.now() - beginTime, 'render end')
+        // console.log()
+    });
+    // const data = {
+    //     nodes: [
+    //         { id: '3'},
+    //         { id: '4'},
+    //         { id: '5'},
+    //         { id: '6'},
+    //         { id: '7'},
+    //     ],
+    //     edges: [
+    //         { id: '3-4', source: '3', target: '4' },
+    //         { id: '3-5', source: '3', target: '5' },
+    //         { id: '4-5', source: '4', target: '5' },
+    //         { id: '5-6', source: '5', target: '6' },
+    //         { id: '6-7', source: '6', target: '7' },
+    //     ]
+    // }
+
+</script>
+</body>
+</html>

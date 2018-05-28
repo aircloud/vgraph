@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    .links line {
+        stroke: #999;
+        stroke-opacity: 0.6;
+    }
+
+    .nodes circle {
+        stroke: #fff;
+        stroke-width: 1.5px;
+    }
+
+</style>
+<svg width="4296" height="2334"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+    function restrictNodes(nodes, width, height, padding = 50){
+
+        if(nodes.length === 1){
+            nodes[0].x = width / 2
+            nodes[0].y = height / 2
+            return nodes
+        }
+
+        let maxY = 0,maxX = 0,minY = 9999,minX = 9999
+
+        let strictWidth = width - padding * 2,
+            strictHeight = height - padding * 2
+
+        nodes.forEach((node) => {
+
+            const {x, y, gfx} = node
+
+            if (maxY < y) maxY = y
+            if (minY > y) minY = y
+            if (maxX < x) maxX = x
+            if (minX > x) minX = x
+
+        })
+
+        nodes.forEach((node) => {
+            node.x = strictWidth * (node.x - minX) / (maxX - minX) + padding
+            node.y = strictHeight * (node.y - minY) / (maxY - minY) + padding
+        })
+    }
+
+    var svg = d3.select("svg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var simulation = d3.forceSimulation()
+        .force("link", d3.forceLink().id(function(d) { return d.id; }))
+        .force("charge", d3.forceManyBody())
+        .force("center", d3.forceCenter(width / 2, height / 2));
+
+    d3.json("http://localhost:3100/json/graph/gen_data10k.json", function(error, graph) {
+        if (error) throw error;
+
+        restrictNodes(graph.nodes, width, height)
+
+        var link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter().append("line")
+            .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+        var node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("circle")
+            .data(graph.nodes)
+            .enter().append("circle")
+            .attr("r", 5)
+            .attr("fill", function(d) { return color(d.group); })
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        node.append("title")
+            .text(function(d) { return d.id; });
+
+        simulation
+            .nodes(graph.nodes)
+            .on("tick", ticked);
+
+        simulation.force("link")
+            .links(graph.links);
+
+        let ifticked = false
+
+        function ticked() {
+
+            if(ifticked) return
+            else ifticked = true
+
+            let begin = Date.now()
+
+            link
+                .attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            node
+                .attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+
+            console.log(Date.now())
+            setTimeout(()=>{
+                console.log("Time:",Date.now() - begin)
+            })
+        }
+    });
+
+    function dragstarted(d) {
+        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+        if (!d3.event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+    }
+
+</script>
