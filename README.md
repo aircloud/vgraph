@@ -1,11 +1,13 @@
+<p align="center"><a href="http://vgraph.org" target="_blank" rel="noopener noreferrer"><img width="80" src="./vgraph.png" alt="VGraph"></a></p>
+<h4 align="center">Vgraph: A big graph visualization engine for user interactive exploration.
+</h4>
+<p align="center">
 
-<div style="text-align:center"> 
-<img src="./vgraph.png" style="width: 200px"/>
-<h5>Vgraph: A big graph visualization engine for user interactive exploration.
-</h5>
-</div>
+<a href="http://vgraph.org" target="_blank" rel="noopener noreferrer">LIVE PREVIEW</a>
+|
+<a href="http://vgraph.org" target="_blank" rel="noopener noreferrer">DOCUMENT</a>
 
-[LIVE PREVIEW](http://vgraph.org/)
+</p>
 
 #### Notification
 
