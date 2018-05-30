@@ -4,8 +4,8 @@
 <p align="center">
 
 <a href="http://vgraph.org" target="_blank" rel="noopener noreferrer">LIVE PREVIEW</a>
-|
-<a href="http://vgraph.org" target="_blank" rel="noopener noreferrer">DOCUMENT</a>
+<span>|</span>
+<a href="http://doc.vgraph.org" target="_blank" rel="noopener noreferrer">DOCUMENT</a>
 
 </p>
 
