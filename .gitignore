@@ -2,6 +2,7 @@
 
 #now
 /src
+/build
 
 # dependencies
 /node_modules
